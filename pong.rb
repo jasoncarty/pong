@@ -2,9 +2,9 @@
 require 'gosu'
 
 class GameWindow < Gosu::Window
-  
+
   attr_accessor :screen
-  
+
   def initialize
     super 640, 480, false
     self.caption = 'Pong'
@@ -78,7 +78,7 @@ class Player
   attr_accessor :x, :y, :vel_x, :vel_y, :width, :height, :position_left, :position_right
 
   def initialize(window)
-    @x = @y = @vel_x = @vel_y 
+    @x = @y = @vel_x = @vel_y
     @score = 0
     @screen = window
     @image = Gosu::Image.new(window, "paddle.png", false)
@@ -93,7 +93,7 @@ class Player
   def position_right
     @x + self.width/2
   end
-  
+
   def go_left
     @x -= 5
   end
@@ -145,19 +145,19 @@ class Ball
     if ball.y == 0 and ball.x != 0
       @vel_y *= -1
     else
-      @vel_x *= -1 
+      @vel_x *= -1
     end
   end
 
   def player_collision
-    @vel_y *= -1 
+    @vel_y *= -1
   end
 end
 
 class StartWindow < Gosu::Window
 
   def initialize
-    super 640, 480, false    
+    super 640, 480, false
     @start = false
     @font = Gosu::Font.new(self, Gosu::default_font_name, 20)
   end
@@ -167,7 +167,7 @@ class StartWindow < Gosu::Window
       close
     end
     if button_down? Gosu::KbRight then
-      
+
       window = GameWindow.new.show
       close
     end
@@ -184,7 +184,7 @@ class StartWindow < Gosu::Window
   end
 
   def draw
-    @font.draw("Press any key to play", 10, 10, 0, 1.0, 1.0, Gosu::Color::WHITE)   
+    @font.draw("Press any key to play", 10, 10, 0, 1.0, 1.0, Gosu::Color::WHITE)
   end
 
 end
