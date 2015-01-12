@@ -20,11 +20,11 @@ class Player
   end
 
   def go_left
-    @x -= 5
+    @x -= 5 unless self.position_left == 0
   end
 
   def go_right
-    @x += 5
+    @x += 5 unless self.position_right == @screen.width
   end
 
   def warp(x, y)

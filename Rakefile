@@ -1,7 +1,7 @@
 require_relative 'classes/application'
 
 task :run do
-  StartWindow.new.show
+  GameWindow.new.show
 end
 
 task default: :run

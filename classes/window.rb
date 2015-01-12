@@ -6,65 +6,79 @@ class GameWindow < Gosu::Window
     super 640, 480, false
     self.caption = 'Pong'
     @screen = self
-    @player = Player.new(self)
-    @ball = Ball.new(self)
-    @player.warp(320, 460)
-    @ball.warp(320, 0)
+    @start_window = StartWindow.new(self)
     @top_limit = 0
-    @bottom_limit = 480
-    @right_limit = 640
+    @bottom_limit = self.height
+    @right_limit = self.width
     @left_limit = 0
     @lost = false
   end
 
+  def init
+    @player = Player.new(self)
+    @ball = Ball.new(self)
+    @player.warp(320, 460)
+    @ball.warp(320, 0)
+  end
+
   def update
-    @ball.move
-    if button_down? Gosu::KbLeft or button_down? Gosu::GpLeft then
-      @player.go_left unless @player.position_left == @left_limit
-    end
-    if button_down? Gosu::KbRight or button_down? Gosu::GpRight then
-      @player.go_right unless @player.position_right == @right_limit
-    end
-    if screen_collision? @ball, @screen
-      @ball.collision @ball
-    end
-    if collision? @ball, @player
-      @ball.player_collision
-    end
-    if @ball.y >= 480
-      @lost = true
-      StartWindow.new.show
+    if @start_window.nil?
+      @ball.move
+      player_movements
+      check_screen_collision
+      check_player_collision
+      check_if_lost
     end
   end
 
   def draw
-    @player.draw
-    @ball.draw
+    if @start_window.nil?
+      @ball.draw
+      @player.draw
+    else
+      @start_window.draw
+    end
   end
 
   def button_down(id)
+    if !@start_window.nil?
+      @start_window = nil
+      self.init
+    end
     if id == Gosu::KbEscape
       close
     end
   end
 
-  def screen_collision? ball, screen
-    if ball.x == @right_limit
-      true
-    elsif ball.x == @left_limit
-      true
-    elsif @ball.y == @top_limit
-      true
+  def player_movements
+    if button_down? Gosu::KbLeft or button_down? Gosu::GpLeft then
+      @player.go_left
+    end
+    if button_down? Gosu::KbRight or button_down? Gosu::GpRight then
+      @player.go_right 
     end
   end
 
-  def collision? obj1, obj2
-    if obj1.y == (obj2.y - 10)
-      if obj1.x >= obj2.position_left and obj1.x <= obj2.position_right
-        true
+  def check_screen_collision
+    if @ball.x == @right_limit || @ball.x == @left_limit || @ball.y == @top_limit
+      @ball.collision(@ball)
+    end
+  end
+
+  def check_player_collision
+    if @ball.y == (@player.y - 10)
+      if @ball.x >= @player.position_left and @ball.x <= @player.position_right
+        @ball.player_collision
       end
-    else
-      false
+    end
+  end
+
+  def check_if_lost
+    if @ball.y >= @screen.height
+      @lost = true
+      @start_window = StartWindow.new(self)
+      @ball = player = nil
+      self.init
     end
   end
 
