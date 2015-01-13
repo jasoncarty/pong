@@ -15,6 +15,7 @@ class GameWindow < Gosu::Window
   end
 
   def init
+    @timer = Timer.new(self, Time.now)
     @player = Player.new(self)
     @ball = Ball.new(self)
     @player.warp(320, 460)
@@ -36,6 +37,9 @@ class GameWindow < Gosu::Window
       @ball.draw
       @player.draw
     else
+      if @lost
+        @timer.draw
+      end
       @start_window.draw
     end
   end
@@ -55,7 +59,7 @@ class GameWindow < Gosu::Window
       @player.go_left
     end
     if button_down? Gosu::KbRight or button_down? Gosu::GpRight then
-      @player.go_right 
+      @player.go_right
     end
   end
 
@@ -78,6 +82,7 @@ class GameWindow < Gosu::Window
       @lost = true
       @start_window = StartWindow.new(self)
       @ball = player = nil
+      @timer.end(Time.now)
       self.init
     end
   end
