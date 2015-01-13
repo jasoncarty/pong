@@ -38,7 +38,7 @@ class GameWindow < Gosu::Window
       @player.draw
     else
       if @lost
-        @timer.draw
+        @timer.draw(@game_duration)
       end
       @start_window.draw
     end
@@ -83,6 +83,7 @@ class GameWindow < Gosu::Window
       @start_window = StartWindow.new(self)
       @ball = player = nil
       @timer.end(Time.now)
+      @game_duration = @timer.play_time
       self.init
     end
   end

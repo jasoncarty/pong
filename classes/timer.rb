@@ -17,15 +17,15 @@ class Timer
 
   def play_time
     if !@end.nil?
-      @end - @start
+      time = (Time.at(@end) - Time.at(@start)).round(2)
     end
+
   end
 
-  def draw
-    puts @playing_time
+  def draw(time)
     @font.draw(
-                "Elapsed playing time: #{@playing_time}",
-                (@screen.width/2 - (@font.text_width("Elapsed playing time: #{@playing_time}")/2)),
+                "Elapsed playing time: #{time} seconds",
+                (@screen.width/2 - (@font.text_width("Elapsed playing time: #{time} seconds")/2)),
                 100, 0, 1.0, 1.0,
                 Gosu::Color::WHITE
               )
